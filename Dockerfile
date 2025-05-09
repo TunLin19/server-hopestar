@@ -1,12 +1,22 @@
 FROM maven:3-openjdk-17 AS build
 WORKDIR /app
 
-COPY . .
-RUN mvn clean package -DskipTests
+# Copy file cấu hình Maven trước
+COPY pom.xml .
+COPY .mvn .mvn
+COPY mvnw .
+COPY mvnw.cmd .
 
+# Tải dependencies
+RUN mvn dependency:go-offline
 
-# Run stage
+# Copy mã nguồn
+COPY src src
 
+# Đóng gói ứng dụng
+RUN mvn package -DskipTests
+
+# Giai đoạn runtime
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
