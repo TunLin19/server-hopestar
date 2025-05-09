@@ -1,26 +1,21 @@
-FROM maven:3-openjdk-17 AS build
+FROM maven:3.8.4-openjdk-17 AS build
 WORKDIR /app
 
-# Copy file cấu hình Maven trước
-COPY pom.xml .
-COPY .mvn .mvn
-COPY mvnw .
-COPY mvnw.cmd .
+# Copy toàn bộ project
+COPY . .
 
-# Tải dependencies
-RUN mvn dependency:go-offline
+# Clean và package
+RUN mvn clean package -DskipTests
 
-# Copy mã nguồn
-COPY src src
-
-# Đóng gói ứng dụng
-RUN mvn package -DskipTests
+# Kiểm tra file WAR đã tồn tại chưa
+RUN ls -la target/
 
 # Giai đoạn runtime
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-COPY --from=build /app/target/be-0.0.1-SNAPSHOT.war be.war
+# Copy file WAR từ build stage
+COPY --from=build /app/target/*.war app.war
 EXPOSE 8080 
 
-ENTRYPOINT ["java","-jar","be.war"]
+ENTRYPOINT ["java","-jar","app.war"]
