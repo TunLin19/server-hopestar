@@ -40,7 +40,7 @@ public class CartGuestController {
             ResponseCookie cookie = ResponseCookie.from("guest_cart_id", cartId)
 //                    .httpOnly(true)
                     .secure(true)
-                    .sameSite("Lax")
+                    .sameSite("None") //"None" nếu frontend/backend khác domain
                     .maxAge(29 * 24 * 60 * 60) // 29 ngày
                     .path("/")
                     .build();
