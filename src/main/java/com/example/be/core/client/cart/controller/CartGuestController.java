@@ -38,8 +38,9 @@ public class CartGuestController {
         // Trả về cookie nếu là lần đầu
         if (guestCartId == null) {
             ResponseCookie cookie = ResponseCookie.from("guest_cart_id", cartId)
-                    .httpOnly(true)
-                    .secure(false)
+//                    .httpOnly(true)
+                    .secure(true)
+                    .sameSite("Lax")
                     .maxAge(29 * 24 * 60 * 60) // 29 ngày
                     .path("/")
                     .build();

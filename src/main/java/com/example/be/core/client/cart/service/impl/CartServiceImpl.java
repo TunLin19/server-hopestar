@@ -79,11 +79,8 @@ public class CartServiceImpl implements CartService {
     @Override
     public Object addToCart(AddToCartRequest request, Account account,String guestCartId) throws Exception {
 
-        ShoppingCart cart = new ShoppingCart();
+        ShoppingCart cart = null;
         if (account != null){
-            if(account.getStatus().equals(StatusCommon.IN_ACTIVE)){
-                throw new Exception("Tài khoản đã bạn bị vô hiệu");
-            }
             cart = shoppingCartRepository.findShoppingCartByIdAccount(account);
         }else {
             cart = shoppingCartRepository.findShoppingCartByGuestId(guestCartId).get();
